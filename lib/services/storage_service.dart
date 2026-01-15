@@ -16,7 +16,6 @@ class StorageService {
     return StorageService(prefs);
   }
 
-  // --- Background Scan Preferences ---
 
   Future<void> setBackgroundMonitoring(bool enabled) async {
     await _prefs.setBool(_keyBackgroundScan, enabled);
@@ -36,9 +35,6 @@ class StorageService {
     return DateTime.tryParse(str);
   }
 
-  // --- Device Persistence ---
-
-  // We store devices as a Map<IP, JsonString>
   Future<void> saveDevices(List<NetworkDevice> currentDevices) async {
     final Map<String, dynamic> knownDevicesMap = _getKnownDevicesMap();
 
@@ -46,23 +42,20 @@ class StorageService {
       final existingData = knownDevicesMap[device.ip];
       
       if (existingData != null) {
-        // Update existing device
         final existingDevice = NetworkDevice.fromJson(existingData);
         
         final updatedDevice = device.copyWith(
-          isTrusted: existingDevice.isTrusted, // Preserve trust
+          isTrusted: existingDevice.isTrusted,
           firstSeen: existingDevice.firstSeen ?? DateTime.now(),
           lastSeen: DateTime.now(),
-          // Increment seen count? We could add this field to the model later
         );
         
         knownDevicesMap[device.ip] = updatedDevice.toJson();
       } else {
-        // New device
         final newDevice = device.copyWith(
           firstSeen: DateTime.now(),
           lastSeen: DateTime.now(),
-          isTrusted: false, // Default to untrusted
+          isTrusted: false,
         );
         knownDevicesMap[device.ip] = newDevice.toJson();
       }
@@ -71,7 +64,6 @@ class StorageService {
     await _prefs.setString(_keyDevices, jsonEncode(knownDevicesMap));
   }
   
-  // Mark a device as trusted/untrusted
   Future<void> setDeviceTrust(String ip, bool isTrusted) async {
     final Map<String, dynamic> knownDevicesMap = _getKnownDevicesMap();
     

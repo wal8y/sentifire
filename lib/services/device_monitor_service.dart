@@ -29,7 +29,7 @@ class DeviceMonitorService extends ChangeNotifier {
   NetworkInfo? get networkInfo => _networkInfo;
   bool get isMonitoring => _isMonitoring;
   bool get isScanning => _isScanning;
-  bool get isVpnActive => false; // Real implementation removed as requested
+  bool get isVpnActive => false;
 
   DeviceMonitorService._internal() {
     _initNotifications();

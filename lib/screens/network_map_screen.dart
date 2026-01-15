@@ -16,10 +16,8 @@ class _NetworkMapScreenState extends State<NetworkMapScreen> with TickerProvider
   late AnimationController _zoneController;
   late AnimationController _packetController;
   
-  // Assuming global or provided service in real app
   final DeviceMonitorService _deviceMonitor = DeviceMonitorService();
   
-  // For interactivity (simple zoom/pan placeholder)
   double _scale = 1.0;
   Offset _offset = Offset.zero;
 
@@ -47,9 +45,6 @@ class _NetworkMapScreenState extends State<NetworkMapScreen> with TickerProvider
     _pulseController.dispose();
     _zoneController.dispose();
     _packetController.dispose();
-    // Don't dispose _deviceMonitor here if shared, but we created a local reference for this screen.
-    // In a real app with Provider, we wouldn't dispose it here.
-    // We'll assume it's shared/singleton logic or safe to ignore for now.
     super.dispose();
   }
 
@@ -57,7 +52,6 @@ class _NetworkMapScreenState extends State<NetworkMapScreen> with TickerProvider
   Widget build(BuildContext context) {
     final devices = _deviceMonitor.devices;
     final deviceCount = devices.length;
-    // Simple logic for safe/infected based on blocked status for visualization
     final safeZones = devices.where((d) => !d.isBlocked).length;
     final infectedZones = devices.where((d) => d.isBlocked).length;
 
@@ -89,7 +83,7 @@ class _NetworkMapScreenState extends State<NetworkMapScreen> with TickerProvider
                 packetValue: _packetController.value,
                 safeZones: safeZones,
                 infectedZones: infectedZones,
-                deviceCount: deviceCount > 0 ? deviceCount : 5, // Show at least 5 nodes for demo if empty
+                deviceCount: deviceCount > 0 ? deviceCount : 5,
                 offset: _offset,
                 scale: _scale,
               ),
@@ -142,7 +136,6 @@ class NetworkMapPainter extends CustomPainter {
     canvas.scale(scale);
     canvas.translate(-center.dx, -center.dy);
 
-    // 1. Background Gradient
     final bgGradient = RadialGradient(
       center: Alignment.center,
       radius: 1.5,
@@ -153,16 +146,11 @@ class NetworkMapPainter extends CustomPainter {
       ],
       stops: const [0.0, 0.6, 1.0],
     );
-    // We draw rect over entire possible canvas area accounting for offset/scale? 
-    // Simpler to just draw background fixed and transform content.
-    // But gradient needs to be screen relative usually.
-    // Let's just fill the screen with solid color in build and draw grid here.
-    
-    // 2. Fisheye Grid Effect
+
     paint.shader = null;
     paint.style = PaintingStyle.stroke;
     paint.color = Colors.blue.withOpacity(0.15); 
-    paint.strokeWidth = 1.0 / scale; // Keep lines thin
+    paint.strokeWidth = 1.0 / scale;
 
     const int gridLines = 24;
     for (int i = 0; i <= gridLines; i++) {
@@ -187,7 +175,6 @@ class NetworkMapPainter extends CustomPainter {
       canvas.drawPath(vPath, paint);
     }
 
-    // 3. Central Hub
     paint.style = PaintingStyle.fill;
     paint.color = Colors.blue.withOpacity(0.2);
     canvas.drawCircle(center, 60 + pulseValue * 15, paint);
@@ -201,22 +188,19 @@ class NetworkMapPainter extends CustomPainter {
     paint.color = Colors.white;
     canvas.drawCircle(center, 6, paint);
 
-    // 4. Nodes
     final random = math.Random(42);
     for (int i = 0; i < deviceCount; i++) {
       final angle = random.nextDouble() * 2 * math.pi + (zoneValue * 0.2);
-      final distance = 150 + random.nextDouble() * 150; // Spread out more
+      final distance = 150 + random.nextDouble() * 150;
       
       final nodeX = center.dx + math.cos(angle) * distance;
       final nodeY = center.dy + math.sin(angle) * distance;
       final nodePos = Offset(nodeX, nodeY);
 
-      // Connection Line
       paint.color = Colors.blue.withOpacity(0.2);
       paint.strokeWidth = 1 / scale;
       canvas.drawLine(center, nodePos, paint);
 
-      // Packet
       final packetOffset = (packetValue + random.nextDouble()) % 1.0;
       final packetX = center.dx + (nodeX - center.dx) * packetOffset;
       final packetY = center.dy + (nodeY - center.dy) * packetOffset;
@@ -225,14 +209,11 @@ class NetworkMapPainter extends CustomPainter {
       paint.color = Colors.cyanAccent;
       canvas.drawCircle(Offset(packetX, packetY), 4 / scale, paint);
 
-      // Node
       final isInfected = i < infectedZones;
       paint.color = isInfected ? Colors.red : Colors.green;
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(nodePos, 8 / scale, paint);
       
-      // Label (Host/IP) - Simplified for map
-      // In full impl, we'd pass device names
     }
     
     canvas.restore();
@@ -240,7 +221,7 @@ class NetworkMapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant NetworkMapPainter oldDelegate) {
-    return true; // Always repaint for animation
+    return true;
   }
 }
 

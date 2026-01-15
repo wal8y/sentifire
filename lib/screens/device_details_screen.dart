@@ -86,7 +86,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
           children: [
-            // 1. Hero Card
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
@@ -208,7 +207,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
 
             const SizedBox(height: 24),
 
-            // 2. Trust Action Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -238,7 +236,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
             
             const SizedBox(height: 32),
 
-            // 3. Stats Grid
             Row(
               children: [
                 Expanded(
@@ -263,7 +260,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
             
             const SizedBox(height: 16),
             
-            // 4. Details List
             Container(
               decoration: BoxDecoration(
                 color: const Color(0xFF1E2732),
@@ -284,7 +280,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
 
             const SizedBox(height: 24),
             
-            // 5. Port Scan Button
              SizedBox(
               width: double.infinity,
               child: TextButton.icon(

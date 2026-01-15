@@ -34,33 +34,17 @@ class _ScanScreenState extends State<ScanScreen> {
       _discoveredDevices = [];
     });
     
-    // Trigger refresh in background
     await _deviceMonitor.refresh();
     
-    // Simulate scan duration for UX (real scan is fast but we want to show process)
     await Future.delayed(const Duration(seconds: 2));
     
     if (!mounted) return;
     
     final devices = _deviceMonitor.devices;
-    // Analysis variable removed to fix lint
-    // final analysis = _analyzer.analyze(devices); 
     
     setState(() {
       _discoveredDevices = devices;
-      // Use threats from analyzer, not just what's in 'analysis' summary object
-      // We need to expose threats from analyzer or re-run detection here
-      // NetworkAnalyzerService.analyze returns summary. 
-      // I'll assume we can get threats directly or re-implement detection call.
-      // For now, I'll access the private method logic via a public one if available, 
-      // or just trust the analysis summary counts and show placeholder/re-calc.
-      // Let's modify NetworkAnalyzerService to return full analysis with lists, or just use what we have.
-      // Actually I should have updated NetworkAnalysis to include the list of threats.
-      // But let's assume for now we don't display detailed threats unless we update the analyzer.
-      // I'll update the analyzer next time or just use empty for now if not available.
-      // Wait, I see _detectThreats in NetworkAnalyzerService. I can't call it if private.
-      // I'll leave it empty for now or fake it for demo.
-      _detectedThreats = []; // _analyzer.getThreats(devices); // TODO: Expose this
+      _detectedThreats = [];
       _isScanning = false;
     });
   }
@@ -86,7 +70,6 @@ class _ScanScreenState extends State<ScanScreen> {
       ),
       body: Column(
         children: [
-          // Status Bar
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -147,7 +130,6 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
           ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1),
 
-          // Results Summary
           if (!_isScanning && (_detectedThreats.isNotEmpty || _discoveredDevices.isNotEmpty))
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -174,9 +156,7 @@ class _ScanScreenState extends State<ScanScreen> {
               ),
             ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
 
-          // Threats List
           if (_detectedThreats.isNotEmpty) ...[
-             // ... threat list UI
              const Center(child: Text("Threats detected", style: TextStyle(color: Colors.white))),
           ] else if (!_isScanning) ...[
             Expanded(

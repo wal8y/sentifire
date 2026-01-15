@@ -14,7 +14,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
   String? _selectedRegion;
   late MapController _mapController;
   
-  // Istanbul coordinates
   final LatLng _center = const LatLng(41.0082, 28.9784);
   
   Map<String, RegionData> _regions = {
@@ -81,7 +80,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
       ),
       body: Stack(
         children: [
-          // Simplified FlutterMap with markers
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
@@ -99,7 +97,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
                 userAgentPackageName: 'com.sentifire.app',
                 tileProvider: NetworkTileProvider(),
               ),
-              // Region Markers
               MarkerLayer(
                 markers: _regions.entries.map((entry) {
                   final data = entry.value;
@@ -124,7 +121,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
             ],
           ),
 
-          // Region Details Panel
           if (_selectedRegion != null)
             Positioned(
               bottom: 0,
@@ -181,10 +177,8 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
   }
 
   void _handleMapTap(LatLng point) {
-    // Check if tap is near any region
     for (final entry in _regions.entries) {
       final distance = _calculateDistance(point, entry.value.position);
-      // If within ~500 meters
       if (distance < 0.005) {
         setState(() {
           _selectedRegion = entry.key;
@@ -194,7 +188,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
       }
     }
     
-    // Deselect if tapping elsewhere
     if (_selectedRegion != null) {
       setState(() {
         _selectedRegion = null;
@@ -204,7 +197,7 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
 
   double _calculateDistance(LatLng point1, LatLng point2) {
     const distance = Distance();
-    return distance.as(LengthUnit.Meter, point1, point2) / 1000.0; // Convert to km
+    return distance.as(LengthUnit.Meter, point1, point2) / 1000.0;
   }
 
   Widget _buildRegionDetails(String regionName) {
@@ -225,7 +218,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Handle
           Container(
             margin: const EdgeInsets.only(top: 12),
             width: 40,
@@ -264,7 +256,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Stats
                 Row(
                   children: [
                     _buildStatCard(
@@ -284,7 +275,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Threat Level
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -313,7 +303,6 @@ class _CommunityMapScreenState extends State<CommunityMapScreen> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Consensus Info
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),

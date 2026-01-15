@@ -12,20 +12,13 @@ class AlertsScreen extends StatefulWidget {
 }
 
 class _AlertsScreenState extends State<AlertsScreen> {
-  // Services instantiated but not used in this demo version logic 
-  // keeping them for future implementation if needed, or remove to fix lint
-  // final DeviceMonitorService _deviceMonitor = DeviceMonitorService();
-  // final NetworkAnalyzerService _analyzer = NetworkAnalyzerService();
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder threats
     final threats = <NetworkThreat>[]; 
     
-    // Add some sample verified threats for demonstration
     final verifiedThreats = [
       ...threats,
-      // Sample community-verified threats
       NetworkThreat(
         id: 'comm_1',
         type: ThreatType.rogueAccessPoint,

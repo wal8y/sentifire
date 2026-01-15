@@ -14,7 +14,6 @@ class DeviceListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Categorize
     final now = DateTime.now();
     final alerts = devices.where((d) => 
         !d.isTrusted && 
@@ -117,7 +116,7 @@ class DeviceListScreen extends StatelessWidget {
   }
 
   Widget _buildDeviceCard(BuildContext context, NetworkDevice device, bool isAlert, bool isTrusted, bool isOffline) {
-    Color statusColor = Colors.amber; // Default to Yellow (Known)
+    Color statusColor = Colors.amber;
     if (isAlert) statusColor = Colors.red;
     else if (isTrusted) statusColor = Colors.green;
     else if (isOffline) statusColor = Colors.grey;

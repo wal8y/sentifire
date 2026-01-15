@@ -24,7 +24,6 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // Settings action
             },
           ),
         ],
@@ -33,7 +32,6 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Avatar and Sentinel Level
             _buildProfileHeader(trustScore)
                 .animate()
                 .fadeIn(duration: 400.ms)
@@ -41,7 +39,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // Trust Score Bar
             _buildTrustScoreBar(trustScore)
                 .animate()
                 .fadeIn(delay: 200.ms, duration: 400.ms)
@@ -49,7 +46,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // Stats Cards
             Row(
               children: [
                 Expanded(
@@ -80,7 +76,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Accuracy Card
             _buildAccuracyCard(accuracy)
                 .animate()
                 .fadeIn(delay: 500.ms, duration: 400.ms)
@@ -88,7 +83,6 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // Additional Info
             _buildInfoSection()
                 .animate()
                 .fadeIn(delay: 600.ms, duration: 400.ms),
@@ -118,7 +112,6 @@ class ProfileScreen extends StatelessWidget {
 
     return Column(
       children: [
-        // Avatar
         Container(
           width: 120,
           height: 120,
@@ -148,7 +141,6 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         
-        // Sentinel Level
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           decoration: BoxDecoration(

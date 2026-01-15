@@ -5,7 +5,7 @@ import '../services/device_monitor_service.dart';
 import '../services/network_analyzer_service.dart';
 import '../models/network_analysis.dart';
 import 'device_list_screen.dart';
-import 'network_map_screen.dart'; // Add import
+import 'network_map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final NetworkAnalyzerService _analyzer = NetworkAnalyzerService();
   
   NetworkAnalysis? _analysis;
-  bool _showVisuals = true; // Toggle for visuals
+  bool _showVisuals = true;
 
   @override
   void initState() {
@@ -92,15 +92,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           return Stack(
             fit: StackFit.expand,
             children: [
-              // Custom Network Map Background
               if (_showVisuals)
                 Positioned.fill(
                   child: _buildNetworkMap(analysis),
                 )
               else
-                Container(color: const Color(0xFF0F1419)), // Solid background when visuals off
+                Container(color: const Color(0xFF0F1419)),
               
-              // Top Header
               Positioned(
                 top: 0,
                 left: 0,
@@ -154,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.map), // Changed icon to map
+                              icon: const Icon(Icons.map),
                               color: Colors.white,
                               onPressed: () {
                                 Navigator.push(
@@ -176,19 +174,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               
               if (_deviceMonitor.isScanning) 
                 Positioned(
-                  top: 80, // Approximate height of header
+                  top: 80,
                   left: 0,
                   right: 0,
                   child: const LinearProgressIndicator(minHeight: 2, backgroundColor: Colors.transparent),
                 ),
 
-              // Content Layer (Scrollable)
               Positioned.fill(
                 top: 100,
-                // Removed bottom: 100 constraint to allow full scrolling
                 child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(), // Improve scroll feel
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 120), // Add bottom padding for buttons
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 120),
                   child: isSmallScreen
                       ? Column(
                           children: [
@@ -210,7 +206,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // Bottom Action Buttons
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -391,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 20),
           
-          // Network Health
           _buildAnalysisCard(
             icon: Icons.favorite,
             label: 'Network Health',
@@ -402,7 +396,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 16),
           
-          // Devices
           _buildAnalysisCard(
             icon: Icons.device_hub,
             label: 'Total Devices',
@@ -413,7 +406,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 16),
           
-          // Trust Score
           _buildAnalysisCard(
             icon: Icons.verified,
             label: 'Trust Score',
@@ -500,7 +492,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             color: Colors.red,
           ),
           const SizedBox(height: 20),
-          // Monitoring Toggle
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -751,7 +742,6 @@ class NetworkMapPainter extends CustomPainter {
     final paint = Paint();
     final center = Offset(size.width / 2, size.height / 2);
     
-    // 1. Background Gradient (Deep Space / Cyber)
     final bgGradient = RadialGradient(
       center: Alignment.center,
       radius: 1.5,
@@ -765,28 +755,24 @@ class NetworkMapPainter extends CustomPainter {
     paint.shader = bgGradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
-    // 2. Fisheye Grid Effect - Enhanced
     paint.shader = null;
     paint.style = PaintingStyle.stroke;
-    paint.color = Colors.blue.withOpacity(0.1); // Slightly brighter
+    paint.color = Colors.blue.withOpacity(0.1);
     paint.strokeWidth = 1.2;
 
-    const int gridLines = 24; // More lines
+    const int gridLines = 24;
     for (int i = 0; i <= gridLines; i++) {
-      // Horizontal curves with strong fisheye
       final y = size.height * (i / gridLines);
       final path = Path();
       path.moveTo(0, y);
       
       for (double x = 0; x <= size.width; x += size.width / 40) {
-        // Distort Y based on distance from center (Stronger factor 80)
         final dist = (x - center.dx).abs() / (size.width / 2);
         final distortion = math.sin(dist * math.pi) * 80 * (y < center.dy ? 1 : -1);
         path.lineTo(x, y + distortion * 0.3);
       }
       canvas.drawPath(path, paint);
       
-      // Vertical curves
       final x = size.width * (i / gridLines);
       final vPath = Path();
       vPath.moveTo(x, 0);
@@ -798,7 +784,6 @@ class NetworkMapPainter extends CustomPainter {
       canvas.drawPath(vPath, paint);
     }
 
-    // 3. Central Hub (The Firewall) - Pulse stronger
     paint.style = PaintingStyle.fill;
     paint.color = Colors.blue.withOpacity(0.15);
     canvas.drawCircle(center, 60 + pulseValue * 15, paint);
@@ -808,32 +793,25 @@ class NetworkMapPainter extends CustomPainter {
     paint.strokeWidth = 2;
     canvas.drawCircle(center, 60 + pulseValue * 15, paint);
 
-    // Inner Core
     paint.style = PaintingStyle.fill;
     paint.color = Colors.white;
     canvas.drawCircle(center, 6, paint);
     paint.color = Colors.blue[300]!;
     canvas.drawCircle(center, 12, paint);
 
-    // 4. Connected Devices (Nodes)
-    final random = math.Random(42); // Fixed seed
+    final random = math.Random(42);
     for (int i = 0; i < deviceCount; i++) {
-      // Random position in polar coordinates
-      final angle = random.nextDouble() * 2 * math.pi + (zoneValue * 0.2); // Rotate
+      final angle = random.nextDouble() * 2 * math.pi + (zoneValue * 0.2);
       final distance = 120 + random.nextDouble() * (math.min(size.width, size.height) / 2 - 140);
       
       final nodeX = center.dx + math.cos(angle) * distance;
       final nodeY = center.dy + math.sin(angle) * distance;
       final nodePos = Offset(nodeX, nodeY);
 
-      // Connection Line
       paint.color = Colors.blue.withOpacity(0.15);
       paint.strokeWidth = 1;
       canvas.drawLine(center, nodePos, paint);
 
-      // Data Packets (Moving dots)
-      // Calculate packet position based on packetValue (0..1)
-      // Add randomness per line so they don't move in sync
       final packetOffset = (packetValue + random.nextDouble()) % 1.0;
       final packetX = center.dx + (nodeX - center.dx) * packetOffset;
       final packetY = center.dy + (nodeY - center.dy) * packetOffset;
@@ -842,13 +820,11 @@ class NetworkMapPainter extends CustomPainter {
       paint.color = Colors.cyanAccent.withOpacity(0.8);
       canvas.drawCircle(Offset(packetX, packetY), 3, paint);
 
-      // Node
       final isInfected = i < infectedZones;
       paint.color = isInfected ? Colors.red : Colors.green;
       paint.style = PaintingStyle.fill;
       canvas.drawCircle(nodePos, 5, paint);
       
-      // Node Ring
       paint.style = PaintingStyle.stroke;
       paint.color = (isInfected ? Colors.red : Colors.green).withOpacity(0.5);
       paint.strokeWidth = 1.5;

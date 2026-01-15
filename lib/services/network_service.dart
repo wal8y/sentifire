@@ -92,7 +92,6 @@ class NetworkService {
     }
   }
 
-  // VPN/Firewall Control
   Future<bool> requestVpnPermission() async {
     try {
       return await _vpnPlatform.invokeMethod('requestPermission');

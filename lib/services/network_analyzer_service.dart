@@ -53,7 +53,6 @@ class NetworkAnalyzerService {
     final suspiciousKeywords = {'kali', 'backtrack', 'pentest', 'scanner', 'exploit'};
 
     for (var device in devices) {
-      // 1. Insecure Ports
       final foundInsecure = device.ports.where((p) => insecurePorts.contains(p)).toList();
       if (foundInsecure.isNotEmpty) {
         threats.add(NetworkThreat(
@@ -68,7 +67,7 @@ class NetworkAnalyzerService {
         ));
       }
       
-      // 2. Suspicious Hostnames
+      
       if (suspiciousKeywords.any((k) => device.hostname.toLowerCase().contains(k))) {
         threats.add(NetworkThreat(
           id: 'threat_${device.ip}_name',
@@ -82,16 +81,16 @@ class NetworkAnalyzerService {
         ));
       }
 
-      // 3. New Unknown Device (within last 30 mins)
+      
       if (!device.isTrusted && !device.isBlocked && 
           DateTime.now().difference(device.firstSeen).inMinutes < 30) {
-          // This is a "New Device" alert
+          
       }
     }
     return threats;
   }
   
-  // Method to enrich local device list with suspicion flags
+  
   List<NetworkDevice> enrichDevices(List<NetworkDevice> devices) {
     final threats = _detectThreats(devices);
     return devices.map((d) {
